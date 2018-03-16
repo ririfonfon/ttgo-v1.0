@@ -250,9 +250,13 @@ void tftprint_wifilist() {
       tftprint_wifi();
     }
     while (!button2.onPressed()) {
-    }
-    while (button2.onPressed()) {
-      scan_wifi();
+      if (button2.isPressed()) {
+#ifdef DEBUG
+        Serial.println("(button2.onPressed())");
+#endif
+        scan_wifi();
+        return;
+      }
     }
   }
 }//tftprint_wifilist
@@ -264,11 +268,12 @@ void tftprint_wifilist_list () {
   wifi_start += 14;
   wifi_end += 14;
   while (!button1.onPressed()) {
-    if (button1.onPressed()) {
+    if (button1.isPressed()) {
 #ifdef DEBUG
       Serial.println("(button1.onPressed())");
 #endif
       tftprint_wifilist ();
+      return;
     }
   }
 }//tftprint_wifilist_list
