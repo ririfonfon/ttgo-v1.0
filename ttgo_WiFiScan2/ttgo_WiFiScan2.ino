@@ -1,5 +1,7 @@
 
 #define DEBUG 1
+uint8_t scroll = 1;
+uint8_t scroll_range;
 
 #include "WiFi.h"
 int i;
@@ -48,16 +50,16 @@ void setup()
   delay(100);
   tftfonction_init();
   speaker_init();
-  sd_init();
 #ifdef DEBUG
   Serial.println("done!");
 #endif
   tft.println("Setup done");
+  delay(1000);
 }//setup
 
 void loop()
 {
-  scan_wifi();
+  tft_menu();
   SPEAKER().update();
 }//loop
 
