@@ -1,4 +1,7 @@
 void tftclear_white() {
+#ifdef DEBUG
+  Serial.println("tftclear_white()");
+#endif
   tft.setTextWrap(false);
   tft.fillScreen(ST7735_BLACK);
   tft.setCursor(0, 0);
@@ -7,6 +10,9 @@ void tftclear_white() {
 }//tftclear
 
 void tftprint_wifi() {
+#ifdef DEBUG
+  Serial.println("tftprint_wifi()");
+#endif
   tft.setTextColor(ST7735_WHITE);
   tft.print(i + 1);
   tft.print(": ");
@@ -19,6 +25,9 @@ void tftprint_wifi() {
 }//tftprint
 
 void tftfonction_init() {
+#ifdef DEBUG
+  Serial.println("tftfonction_init()");
+#endif
   tft.setCursor(10, 121);
   tft.setTextColor(ST7735_RED);
   tft.print("(1)");
@@ -32,6 +41,9 @@ void tftfonction_init() {
 }//tftfonction_init
 
 void tftfonction_base() {
+#ifdef DEBUG
+  Serial.println("tftfonction_base()");
+#endif
   tft.setCursor(7, 121);
   tft.setTextColor(ST7735_RED);
   tft.print("(Down)");
@@ -45,6 +57,9 @@ void tftfonction_base() {
 }//tftfonction_init
 
 void tftfonction_wifi() {
+#ifdef DEBUG
+  Serial.println("tftfonction_wifi()");
+#endif
   tft.setCursor(8, 121);
   tft.setTextColor(ST7735_RED);
   tft.print("(Back)");
@@ -57,15 +72,36 @@ void tftfonction_wifi() {
   tft.setCursor(0, 8);
 }//tftfonction_init
 
+void tftfonction_wifi_end() {
+#ifdef DEBUG
+  Serial.println("tftfonction_wifi_end()");
+#endif
+  tft.setCursor(8, 121);
+  tft.setTextColor(ST7735_RED);
+  tft.print("(Back)");
+  tft.setCursor(48, 121);
+  tft.setTextColor(ST7735_GREEN);
+  tft.print("(Scan)");
+  tft.setCursor(88, 121);
+  tft.setTextColor(ST7735_BLUE);
+  tft.print("(Menu)");
+  tft.setCursor(0, 8);
+}//tftfonction_init
+
 void tftprint_wifibase() {
+#ifdef DEBUG
+  Serial.println("tftprint_wifibase()");
+#endif
   tftclear_white();
   tft.print(n);
   tft.println(" networks found");
 }
 
 void tftprint_wifilist() {
+#ifdef DEBUG
+  Serial.println("tftprint_wifilist()");
+#endif
   tftprint_wifibase();
-  tftfonction_wifi();
   if (n >= wifi_end) {
 #ifdef DEBUG
     Serial.println("(n >= wifi_end)");
@@ -76,7 +112,7 @@ void tftprint_wifilist() {
     Serial.print("n :");
     Serial.println(n);
 #endif
-    tftprint_wifilist_list ();
+    tftprint_wifilist_next ();
   } else if (n <= wifi_end) {
 #ifdef DEBUG
     Serial.println("(n <= wifi_end)");
@@ -91,34 +127,66 @@ void tftprint_wifilist() {
     for ( i = wifi_start; i < wifi_end; ++i) {
       tftprint_wifi();
     }
-    while (!button3.onPressed()) {
-      if (button3.isPressed()) {
 #ifdef DEBUG
-        Serial.println("(button3.onPressed())");
+    Serial.println("///////////");
+#endif
+    tftfonction_wifi_end();
+#ifdef DEBUG
+    Serial.println("***********");
+#endif
+    while (wifi_end > wifi_end) {
+#ifdef DEBUG
+      Serial.println("while (wifi_end > wifi_end)");
+#endif
+      if (button1.onPressed()) {
+#ifdef DEBUG
+        Serial.println("(button1.tftprint_wifilist_back())");
+#endif
+        tftprint_wifilist_back ();
+      }
+      if (button2.onPressed()) {
+#ifdef DEBUG
+        Serial.println("(button2.scan_wifi())");
 #endif
         scan_wifi();
-        return;
+      }
+      if (button3.onPressed()) {
+#ifdef DEBUG
+        Serial.println("(button3.tft_menu())");
+#endif
+        tft_menu();
       }
     }
   }
 }//tftprint_wifilist
 
-void tftprint_wifilist_list () {
+void tftprint_wifilist_next () {
+#ifdef DEBUG
+  Serial.println("tftprint_wifilist_next ()");
+#endif
+  tftclear_white();
+  tftprint_wifibase();
+  tftfonction_wifi();
+  wifi_start += 14;
+  wifi_end += 14;
   for ( i = wifi_start; i < wifi_end; ++i) {
     tftprint_wifi();
   }
-  wifi_start += 14;
-  wifi_end += 14;
-  while (!button1.onPressed()) {
-    if (button1.isPressed()) {
+}//tftprint_wifilist_next
+
+void tftprint_wifilist_back () {
 #ifdef DEBUG
-      Serial.println("(button1.onPressed())");
+  Serial.println("tftprint_wifilist_back ()");
 #endif
-      tftprint_wifilist ();
-      return;
-    }
+  tftclear_white();
+  tftprint_wifibase();
+  tftfonction_wifi_end();
+  wifi_start -= 14;
+  wifi_end -= 14;
+  for ( i = wifi_start; i < wifi_end; ++i) {
+    tftprint_wifi();
   }
-}//tftprint_wifilist_list
+}//tftprint_wifilist_back
 
 void tft_menu() {
   scroll_range = 2;
@@ -129,21 +197,18 @@ void tft_menu() {
       Serial.println("(button1.onPressed())");
 #endif
       tft_menu_down();
-      //      return;
     }
     if (button2.onPressed()) {
 #ifdef DEBUG
       Serial.println("(button2.onPressed())");
 #endif
       tft_menu_up();
-      //      return;
     }
     if (button3.onPressed()) {
 #ifdef DEBUG
       Serial.println("(button3.onPressed())");
 #endif
       tft_menu_enter();
-      //      return;
     }
   }
 }//tft_meu
