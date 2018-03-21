@@ -1,5 +1,5 @@
 
-#define DEBUG 1
+
 uint8_t scroll = 1;
 uint8_t scroll_range;
 
@@ -37,9 +37,8 @@ File root;
 
 void setup()
 {
-#ifdef DEBUG
-  Serial.begin(115200);
-#endif
+  LOGSETUP();
+  
   pinMode(LED_BUILTIN, OUTPUT);
   tft.initR(INITR_144GREENTAB);   // initialize a ST7735S chip, black tab
   tftclear_white();
@@ -50,9 +49,9 @@ void setup()
   delay(100);
   tftfonction_init();
   speaker_init();
-#ifdef DEBUG
-  Serial.println("done!");
-#endif
+
+  LOG("done!");
+
   tft.println("Setup done");
   delay(1000);
 }//setup
