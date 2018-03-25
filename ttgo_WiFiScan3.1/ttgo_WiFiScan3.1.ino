@@ -30,16 +30,22 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RS
 RBD::Button button1(35);//btn 1
 RBD::Button button2(34);//btn 2
 RBD::Button button3(39);//btn 3
+//RBD::Button setDebounceTimeout(100);
 
 #include "Speaker.h"
 #include "startup_music.h"
 
 #include <mySD.h>
 File root;
+uint8_t sd = 0;
+uint8_t count_btn = 0;
 
 void setup()
 {
   LOGSETUP();
+  button1.setLongTimeout(1000);
+  button2.setLongTimeout(1000);
+  button3.setLongTimeout(1000);
 
   pinMode(LED_BUILTIN, OUTPUT);
   tft.initR(INITR_144GREENTAB);   // initialize a ST7735S chip, black tab
@@ -51,7 +57,7 @@ void setup()
   delay(100);
   tft_f_init();
   speaker_init();
-
+  sd_init();
   LOG("done!");
 
   tft.println("Setup done");

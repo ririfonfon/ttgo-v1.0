@@ -4,18 +4,19 @@ void tft_clear_white() {
   tft.setCursor(0, 0);
   tft.setTextColor(ST7735_WHITE);
   tft.setTextSize(1);
-}//tftclear
+}//tft_clear_white
 
 void tft_wifi() {
   tft.setTextColor(ST7735_WHITE);
   tft.print(i + 1);
-  tft.print(": ");
+  tft.print(":");
+  tft.print(WiFi.channel(i));
+  tft.print(":");
   tft.print(WiFi.SSID(i));
-  tft.print(" (");
+  tft.print("(");
   tft.print(WiFi.RSSI(i));
   tft.print(")");
   tft.println((WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? " " : "*");
-  delay(10);
 }//tftprint
 
 void tft_f_init() {
@@ -137,7 +138,7 @@ void tft_wifi_list_back () {
 }//tftprint_wifilist_back
 
 void tft_menu() {
-  scroll_range = 2;
+  scroll_range = 3;
   tft_menu_scroll();
   while (!scroll_range < scroll_range) {
     if (button1.onPressed()) {
@@ -170,7 +171,13 @@ void tft_menu_enter() {
     scan_wifi();
   } else if (scroll == 2) {
     menu = 2;
-    sd_init();
+    sd_list();
+  } else if (scroll == 3) {
+    menu = 3;
+    tft_clear_white();
+    tft_f_init();
+    tft_bouton();
+    LOG("tft_menu_btn");
   }
 }//tft_menu_enter
 
@@ -183,12 +190,111 @@ void tft_menu_scroll() {
     tft.println("->Wifi Scan");
     tft.setTextColor(ST7735_WHITE);
     tft.println("  SD");
+    tft.println("  Bouton");
   } else if (scroll == 2) {
     tft.setCursor(0, 8);
     tft.setTextColor(ST7735_WHITE);
     tft.println("  Wifi Scan");
     tft.setTextColor(ST7735_RED);
     tft.println("->SD");
+    tft.setTextColor(ST7735_WHITE);
+    tft.println("  Bouton");
+  } else if (scroll == 3) {
+    tft.setCursor(0, 8);
+    tft.setTextColor(ST7735_WHITE);
+    tft.println("  Wifi Scan");
+    tft.println("  SD");
+    tft.setTextColor(ST7735_RED);
+    tft.println("->Bouton");
   }
 }//tft_menu_scroll
+
+void tft_sd_base() {
+  tft.setCursor(8, 121);
+  tft.setTextColor(ST7735_RED);
+  tft.print("(.)");
+  tft.setCursor(48, 121);
+  tft.setTextColor(ST7735_GREEN);
+  tft.print("(.)");
+  tft.setCursor(88, 121);
+  tft.setTextColor(ST7735_BLUE);
+  tft.print("(Menu)");
+  tft.setCursor(0, 8);
+  tft.setTextColor(ST7735_WHITE);
+}//tft_sd_base()
+
+void tft_bouton() {
+  while (!button1.isPressed() || !button2.isPressed()) {
+    if (count_btn > 13) {
+      count_btn = 0;
+      tft_clear_white();
+      tft_f_init();
+    }
+    //    if (button1.onPressed()) {
+    //      count_btn += 1;
+    //      tft.println("1 onPressed");
+    //    }
+    //    if (button2.onPressed()) {
+    //      count_btn += 1;
+    //      tft.println("2 onPressed");
+    //    }
+    //    if (button3.onPressed()) {
+    //      count_btn += 1;
+    //      tft.println("3 onPressed");
+    //    }
+    //        if (button1.setDebounceTimeout(1000)) {
+    //          count_btn += 1;
+    //          tft.println("1 setDebounceTimeout");
+    //        }
+    //        if (button2.setDebounceTimeout(1000)) {
+    //          count_btn += 1;
+    //          tft.println("2 setDebounceTimeout");
+    //        }
+    //        if (button3.setDebounceTimeout(1000)) {
+    //          count_btn += 1;
+    //          tft.println("3 setDebounceTimeout");
+    //        }
+    if (button1.onReleased()) {
+      count_btn += 1;
+      tft.println("1 onReleased");
+    }
+    if (button2.onReleased()) {
+      count_btn += 1;
+      tft.println("2 onReleased");
+    }
+    if (button3.onReleased()) {
+      count_btn += 1;
+      tft.println("3 onReleased");
+    }
+    //    if (button1.isReleased()) tft.print("1 isReleased");
+    //    if (button2.isReleased()) tft.print("2 isReleased");
+    //    if (button3.isReleased()) tft.print("3 isReleased");
+    if (button1.onLongPressed()) {
+      count_btn += 1;
+      tft.println("1 onLongPressed");
+    }
+    if (button2.onLongPressed()) {
+      count_btn += 1;
+      tft.println("2 onLongPressed");
+    }
+    if (button3.onLongPressed()) {
+      count_btn += 1;
+      tft.println("3 onLongPressed");
+    }
+    if (button1.onLongReleased()) {
+      count_btn += 1;
+      tft.println("1 onLongReleased");
+    }
+    if (button2.onLongReleased()) {
+      count_btn += 1;
+      tft.println("2 onLongReleased");
+    }
+    if (button3.onLongReleased()) {
+      count_btn += 1;
+      tft.println("3 onLongReleased");
+    }
+  }
+  LOG("return");
+  return;
+}//tft_bouton
 
